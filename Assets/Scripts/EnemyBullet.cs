@@ -7,7 +7,7 @@ public class EnemyBullet : MonoBehaviour
 
     void Start()
     {
-        Destroy(gameObject, lifetime); // Auto-destroy after time to clean up
+        Destroy(gameObject, lifetime); 
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -20,13 +20,9 @@ public class EnemyBullet : MonoBehaviour
                 player.TakeDamage(damage);
             }
 
-            Destroy(gameObject); // 💥 Destroy bullet on hit
+            Destroy(gameObject); 
         }
 
-        // Optional: destroy bullet if it hits anything else (e.g., wall)
-        // else if (!collision.isTrigger)
-        // {
-        //     Destroy(gameObject);
-        // }
+        
     }
 }

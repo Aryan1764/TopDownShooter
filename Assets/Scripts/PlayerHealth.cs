@@ -8,8 +8,8 @@ public class PlayerHealth : MonoBehaviour
     public int maxHealth = 5;
     private int currentHealth;
 
-    public Slider healthSlider; // UI Slider
-    public GameObject gameOverScreen; // Game Over UI
+    public Slider healthSlider; 
+    public GameObject gameOverScreen; 
 
     void Start()
     {
@@ -47,7 +47,7 @@ public class PlayerHealth : MonoBehaviour
     }
     public void RestartGame()
     {
-        Time.timeScale = 1f; // In case game was paused
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void Heal(int amount)

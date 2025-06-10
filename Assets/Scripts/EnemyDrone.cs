@@ -11,23 +11,23 @@ public class EnemyDrone : MonoBehaviour
     private Slider healthSlider;
     private Transform healthBarTransform;
 
-    // Damage on contact cooldown
+   
     private float damageCooldown = 1f;
     private float lastDamageTime;
 
-    // 🔔 Event for WaveManager to subscribe to
+   
     public event System.Action OnDeath;
 
     void Start()
     {
         currentHealth = maxHealth;
 
-        // Get reference to the player
+      
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
             player = playerObj.transform;
 
-        // Get reference to the Slider (assumes only one Slider exists in children)
+        
         healthSlider = GetComponentInChildren<Slider>();
         if (healthSlider != null)
         {
@@ -35,7 +35,7 @@ public class EnemyDrone : MonoBehaviour
             healthSlider.value = maxHealth;
         }
 
-        // Optional: Cache the health bar's transform if you want to offset its position
+      
         healthBarTransform = healthSlider.transform.parent;
     }
 
@@ -47,7 +47,7 @@ public class EnemyDrone : MonoBehaviour
             transform.Translate(dir * speed * Time.deltaTime);
         }
 
-        // Keep the health bar above the enemy (optional)
+        
         if (healthBarTransform != null)
         {
             healthBarTransform.position = transform.position + Vector3.up * 1.5f;
@@ -65,8 +65,8 @@ public class EnemyDrone : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            OnDeath?.Invoke(); // 🔔 Notify WaveManager
-            Destroy(gameObject); // Also destroys UI if it’s a child
+            OnDeath?.Invoke(); 
+            Destroy(gameObject); 
         }
     }
 

@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    public GameObject bulletPrefab;              // Bullet to spawn
-    public Transform bulletSpawnPoint;           // Where to spawn the bullet from
+    public GameObject bulletPrefab;              
+    public Transform bulletSpawnPoint;           
 
-    public float fireRate = 0.5f;                // Time between shots
+    public float fireRate = 0.5f;             
     private float fireCooldown = 0f;
     private float originalFireRate;
     private Coroutine fireRateBoostRoutine;
@@ -61,7 +61,7 @@ public class PlayerShooting : MonoBehaviour
 
     }
 
-    // 🔫 Called by PowerUp on pickup
+  
     public void ApplyFireRateBoost(float multiplier, float duration)
     {
         if (fireRateBoostRoutine != null)

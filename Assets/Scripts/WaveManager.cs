@@ -52,7 +52,7 @@ public class WaveManager : MonoBehaviour
         Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
         GameObject enemy = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
 
-        // Subscribe to OnDeath event
+       
         var drone = enemy.GetComponent<EnemyDrone>();
         if (drone != null)
         {

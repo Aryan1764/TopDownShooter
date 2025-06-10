@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = moveInput * moveSpeed;
     }
 
-    // ⚡ Called by power-up when picked up
+  
     public void ApplySpeedBoost(int multiplier, float duration)
     {
         if (speedBoostRoutine != null)

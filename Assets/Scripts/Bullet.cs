@@ -31,7 +31,7 @@ public class Bullet : MonoBehaviour
                 drone.TakeDamage(1);
             }
 
-            Destroy(gameObject); // Bullet disappears on hit
+            Destroy(gameObject); 
         }
     }
 }
