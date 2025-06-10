@@ -11,6 +11,13 @@ public class EnemyDrone : MonoBehaviour
     private Slider healthSlider;
     private Transform healthBarTransform;
 
+    // Damage on contact cooldown
+    private float damageCooldown = 1f;
+    private float lastDamageTime;
+
+    // 🔔 Event for WaveManager to subscribe to
+    public event System.Action OnDeath;
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -29,19 +36,18 @@ public class EnemyDrone : MonoBehaviour
         }
 
         // Optional: Cache the health bar's transform if you want to offset its position
-        healthBarTransform = healthSlider.transform.parent; // assumes HealthBar is parent of Slider
+        healthBarTransform = healthSlider.transform.parent;
     }
 
     void Update()
     {
-        // Chase the player
         if (player != null)
         {
             Vector2 dir = (player.position - transform.position).normalized;
             transform.Translate(dir * speed * Time.deltaTime);
         }
 
-        // Keep the health bar above the enemy (optional if it's static in local position)
+        // Keep the health bar above the enemy (optional)
         if (healthBarTransform != null)
         {
             healthBarTransform.position = transform.position + Vector3.up * 1.5f;
@@ -59,7 +65,37 @@ public class EnemyDrone : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Destroy(gameObject); // This also removes the UI since it's a child
+            OnDeath?.Invoke(); // 🔔 Notify WaveManager
+            Destroy(gameObject); // Also destroys UI if it’s a child
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            TryDamagePlayer(collision.collider);
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+            TryDamagePlayer(collision.collider);
+        }
+    }
+
+    private void TryDamagePlayer(Collider2D playerCollider)
+    {
+        if (Time.time - lastDamageTime >= damageCooldown)
+        {
+            PlayerHealth ph = playerCollider.GetComponent<PlayerHealth>();
+            if (ph != null)
+            {
+                ph.TakeDamage(1);
+                lastDamageTime = Time.time;
+            }
         }
     }
 }

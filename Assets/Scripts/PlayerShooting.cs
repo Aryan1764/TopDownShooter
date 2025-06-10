@@ -5,25 +5,35 @@ public class PlayerShooting : MonoBehaviour
     public GameObject bulletPrefab;              // Bullet to spawn
     public Transform bulletSpawnPoint;           // Where to spawn the bullet from
 
+    public float fireRate = 0.5f;                // Time between shots
+    private float fireCooldown = 0f;
+    private float originalFireRate;
+    private Coroutine fireRateBoostRoutine;
+
     private Animator anim;
 
     void Start()
     {
         anim = GetComponent<Animator>();
+        originalFireRate = fireRate;
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // Left click
+        fireCooldown -= Time.deltaTime;
+
+        if (Input.GetMouseButton(0) && fireCooldown <= 0f)
         {
             Shoot();
+            fireCooldown = fireRate;
 
             if (anim != null)
             {
                 anim.SetTrigger("Shoot");
             }
         }
-        else if (Input.GetMouseButtonUp(0))
+
+        if (Input.GetMouseButtonUp(0))
         {
             if (anim != null)
             {
@@ -34,20 +44,36 @@ public class PlayerShooting : MonoBehaviour
 
     void Shoot()
     {
-        // Convert mouse position to world space
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        // Calculate direction from bullet spawn to mouse pointer
         Vector2 shootDirection = (mouseWorldPos - bulletSpawnPoint.position).normalized;
 
-        // Spawn the bullet
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
-
-        // Pass the direction to the bullet
         Bullet bulletScript = bullet.GetComponent<Bullet>();
         if (bulletScript != null)
         {
             bulletScript.SetDirection(shootDirection);
+            
         }
+        if (AudioManager.Instance != null && AudioManager.Instance.shootClip != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.shootClip);
+        }
+
+    }
+
+    // 🔫 Called by PowerUp on pickup
+    public void ApplyFireRateBoost(float multiplier, float duration)
+    {
+        if (fireRateBoostRoutine != null)
+            StopCoroutine(fireRateBoostRoutine);
+
+        fireRateBoostRoutine = StartCoroutine(FireRateBoostRoutine(multiplier, duration));
+    }
+
+    private System.Collections.IEnumerator FireRateBoostRoutine(float multiplier, float duration)
+    {
+        fireRate = originalFireRate / multiplier;
+        yield return new WaitForSeconds(duration);
+        fireRate = originalFireRate;
     }
 }
